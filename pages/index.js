@@ -9,7 +9,6 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import Link from "next/link";
-import Image from 'next/image'
 
 export default function Home() {
     const [user, setUser] = useState({});
@@ -74,6 +73,9 @@ export default function Home() {
 
     const handleEditName = () => {
         setisEditName(!isEditName);
+        if(nameState === "") {
+            return null;
+        }
         if (isEditName) {
             const userDoc = doc(db, "users", user.id);
 
@@ -143,10 +145,9 @@ export default function Home() {
                 <div className="flex flex-col text-white shadow-xl rounded-3xl bg-gray-800 p-6">
                     <div className="flex justify-center gap-6">
                         <div>
-                            <Image
+                            <img
                                 className="h-auto w-52 rounded-full border-8 border-gray-600 drop-shadow-2xl cursor-pointer hover:scale-105 transition-all"
                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                alt=""
                             />
                         </div>
                         <div className="self-center text-center">
@@ -248,7 +249,7 @@ export default function Home() {
                                 className="p-6 flex gap-6 bg-gray-700 rounded-xl border-2 border-gray-600 hover:translate-x-1 hover:translate-y-1 transition-all"
                             >
                                 <div className="self- min-w-fit">
-                                    <Image
+                                    <img
                                         className="h-28 w-28 rounded-full border-4 border-blue-500"
                                         src="/vercel.svg"
                                         alt=""
