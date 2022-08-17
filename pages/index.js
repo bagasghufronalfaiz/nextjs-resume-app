@@ -46,10 +46,8 @@ export default function Home() {
     }, []);
 
     const handleOnBlurName = () => {
-        setisEditName(false);
-        if (nameState === "") {
-            return null;
-        } else {
+        setisEditName(!isEditName);
+        if (nameState !== "") {
             const userDoc = doc(db, "users", user.id);
             const data = { name: nameState };
             updateDoc(userDoc, data);
@@ -63,10 +61,8 @@ export default function Home() {
     };
 
     const handleOnBlurAge = () => {
-        if (ageState === "") {
-            return null;
-        } else {
-            setisEditAge(false);
+        setisEditAge(false);
+        if (ageState !== "") {
             const userDoc = doc(db, "users", user.id);
             const data = { age: ageState };
             updateDoc(userDoc, data);
@@ -159,9 +155,25 @@ export default function Home() {
                     <div className="flex justify-center gap-6">
                         <div>
                             <img
-                                className="h-auto w-52 rounded-full border-8 border-gray-600 drop-shadow-2xl cursor-pointer hover:scale-105 transition-all"
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                className="h-52 w-52 rounded-full border-8 border-gray-600 drop-shadow-2xl cursor-pointer hover:scale-105 transition-all"
+                                src={user.picture}
                             />
+                            <Link href="/profile/update-profile-picture">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-6 w-6 self-center ml-auto text-blue-500 cursor-pointer"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={2}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                    />
+                                </svg>
+                            </Link>
                         </div>
                         <div className="self-center text-center">
                             <div className="flex justify-center">
