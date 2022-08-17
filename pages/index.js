@@ -47,75 +47,88 @@ export default function Home() {
 
     const handleOnBlurName = () => {
         setisEditName(false);
-        const userDoc = doc(db, "users", user.id);
-        const data = { name: nameState };
-        updateDoc(userDoc, data);
-        const newUser = {
-            ...user,
-            name: nameState,
-        };
-
-        setUser(newUser);
-    };
-
-    const handleOnBlurAge = () => {
-        setisEditAge(false);
-        const userDoc = doc(db, "users", user.id);
-        const data = { age: ageState };
-        updateDoc(userDoc, data);
-        const newUser = {
-            ...user,
-            age: ageState,
-        };
-
-        setUser(newUser);
-    };
-
-    const handleEditName = () => {
-        setisEditName(!isEditName);
-        if(nameState === "") {
+        if (nameState === "") {
             return null;
-        }
-        if (isEditName) {
+        } else {
             const userDoc = doc(db, "users", user.id);
-
-            const data = {
-                name: nameState,
-            };
-
+            const data = { name: nameState };
             updateDoc(userDoc, data);
             const newUser = {
                 ...user,
                 name: nameState,
             };
+
             setUser(newUser);
+        }
+    };
+
+    const handleOnBlurAge = () => {
+        if (ageState === "") {
+            return null;
         } else {
-            setTimeout(() => {
-                titleInput?.current?.focus();
-            }, 100);
+            setisEditAge(false);
+            const userDoc = doc(db, "users", user.id);
+            const data = { age: ageState };
+            updateDoc(userDoc, data);
+            const newUser = {
+                ...user,
+                age: ageState,
+            };
+
+            setUser(newUser);
+        }
+    };
+
+    const handleEditName = () => {
+        setisEditName(!isEditName);
+        if (nameState === "") {
+            return null;
+        } else {
+            if (isEditName) {
+                const userDoc = doc(db, "users", user.id);
+
+                const data = {
+                    name: nameState,
+                };
+
+                updateDoc(userDoc, data);
+                const newUser = {
+                    ...user,
+                    name: nameState,
+                };
+                setUser(newUser);
+            } else {
+                setTimeout(() => {
+                    titleInput?.current?.focus();
+                }, 100);
+            }
         }
     };
 
     const handleEditAge = () => {
         setisEditAge(!isEditAge);
-        if (isEditAge) {
-            const userDoc = doc(db, "users", user.id);
-
-            const data = {
-                age: ageState,
-            };
-
-            updateDoc(userDoc, data);
-            const newUser = {
-                ...user,
-                age: ageState,
-            };
-
-            setUser(newUser);
+        if (ageState === "") {
+            return null;
         } else {
-            setTimeout(() => {
-                ageInput?.current?.focus();
-            }, 100);
+            if (isEditAge) {
+                const userDoc = doc(db, "users", user.id);
+
+                const data = {
+                    age: ageState,
+                };
+
+                updateDoc(userDoc, data);
+                const newUser = {
+                    ...user,
+                    age: ageState,
+                };
+
+                setUser(newUser);
+            } else {
+                setTimeout(() => {
+                    ageInput?.current?.focus();
+                }, 100);
+            }
         }
     };
 
