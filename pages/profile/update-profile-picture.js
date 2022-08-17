@@ -42,7 +42,6 @@ const ProfileEdit = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const file = e.target[0]?.files[0];
-        if (!file) return;
         const storageRef = ref(storage, `picture/${file.name}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
         deleteObject(imageRef);
@@ -118,6 +117,7 @@ const ProfileEdit = () => {
                                                 className="shadow appearance-none bg-gray-600 border-2 border-gray-500 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
                                                 accept="image/png, image/jpeg"
                                                 type="file"
+                                                required
                                             />
                                         </div>
                                         <div className="mt-6">

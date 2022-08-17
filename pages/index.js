@@ -8,9 +8,11 @@ import {
     deleteDoc,
     updateDoc,
 } from "firebase/firestore";
+import { getStorage, ref, deleteObject } from "firebase/storage";
+
 import Link from "next/link";
 
-export default function Home() {
+function Home() {
     const [user, setUser] = useState({});
     const [experiences, setExperiences] = useState([]);
     const [isEditName, setisEditName] = useState(false);
@@ -19,6 +21,7 @@ export default function Home() {
     const [isEditAge, setisEditAge] = useState(false);
     const [ageState, setAgeState] = useState("");
     const ageInput = useRef(null);
+    const storage = getStorage();
 
     const usersCollectionRef = collection(db, "users");
     const experiencesCollectionRef = collection(db, "experiences");
@@ -44,6 +47,8 @@ export default function Home() {
         getData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    console.log("user");
+    console.log(user);
 
     const handleOnBlurName = () => {
         setisEditName(!isEditName);
@@ -128,10 +133,11 @@ export default function Home() {
         }
     };
 
-    const deleteExperience = async (id) => {
+    const deleteExperience = (id,name) => {
         const experiencesCollectionRef = doc(db, "experiences", id);
-        await deleteDoc(experiencesCollectionRef);
-
+        deleteDoc(experiencesCollectionRef);
+        const imageRef = ref(storage, "logo/"+name);
+        deleteObject(imageRef);
         const result = experiences.filter((experience) => {
             return experience.id !== id;
         });
@@ -274,11 +280,19 @@ export default function Home() {
                                 className="p-6 flex gap-6 bg-gray-700 rounded-xl border-2 border-gray-600 hover:translate-x-1 hover:translate-y-1 transition-all"
                             >
                                 <div className="self- min-w-fit">
-                                    <img
-                                        className="h-28 w-28 rounded-full border-4 border-blue-500"
-                                        src="/vercel.svg"
-                                        alt=""
-                                    />
+                                    {experience.company_logo_url ? (
+                                        <img
+                                            className="h-28 w-28 rounded-full border-4 border-blue-500"
+                                            src={experience.company_logo_url}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <img
+                                            className="h-28 w-28 rounded-full border-4 border-blue-500"
+                                            src="/vercel.svg"
+                                            alt=""
+                                        />
+                                    )}
                                 </div>
                                 <div className="w-full">
                                     <p className="text-xl font-bold ">
@@ -315,7 +329,7 @@ export default function Home() {
                                         </Link>
                                         <div
                                             onClick={() =>
-                                                deleteExperience(experience.id)
+                                                deleteExperience(experience.id, experience.company_logo_name)
                                             }
                                         >
                                             <svg
@@ -343,3 +357,27 @@ export default function Home() {
         </>
     );
 }
+
+// export  function getStaticProps() {
+//     const experiencesCollectionRef = collection(db, "experiences");
+//     const usersCollectionRef = collection(db, "users");
+//     const experiencesData =  getDocs(experiencesCollectionRef);
+//     const usersData =  getDocs(usersCollectionRef);
+//     // const oneUser = usersData.docs.map((doc) => ({
+//     //     ...doc.data(),
+//     //     id: doc.id,
+//     // }));
+
+//     return {
+//         props: {
+//             experiences: experiencesData.docs,
+//             // experiences: experiencesData.docs.map((doc) => ({
+//             //     ...doc.data(),
+//             //     id: doc.id,
+//             // })),
+//             user: usersData.docs,
+//         },
+//     };
+// }
+
+export default Home;

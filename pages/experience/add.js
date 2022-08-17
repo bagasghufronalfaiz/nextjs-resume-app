@@ -2,13 +2,26 @@ import Head from "next/head";
 import { db } from "../../firebase-config";
 import { collection, addDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import {
+    getStorage,
+    ref,
+    getDownloadURL,
+    uploadBytesResumable,
+    deleteObject,
+} from "firebase/storage";
+import React, { useState } from "react";
 
 const Add = () => {
     const experiencesCollectionRef = collection(db, "experiences");
+    const [progresspercent, setProgresspercent] = useState(0);
+    const storage = getStorage();
+
     const router = useRouter();
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
+        const date = new Date();
+        const file = event.target.company_logo.files[0];
 
         const data = {
             company: event.target.company.value,
@@ -19,7 +32,32 @@ const Add = () => {
             created_at: Date.now(),
         };
 
-        await addDoc(experiencesCollectionRef, data);
+        const storageRef = ref(storage, `logo/${date.toISOString()}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    const newData = {
+                        ...data,
+                        company_logo_url: downloadURL,
+                        company_logo_name: storageRef.name,
+                    };
+                    addDoc(experiencesCollectionRef, newData);
+                });
+            }
+        );
+
         router.push("/");
     };
     return (
@@ -55,6 +93,22 @@ const Add = () => {
                                     name="company"
                                     type="text"
                                     placeholder="Company"
+                                    required
+                                />
+                            </div>
+                            <div className="mt-6">
+                                <label
+                                    className="block text-white text-sm font-bold mb-2"
+                                    htmlFor="company_logo"
+                                >
+                                    Company Logo
+                                </label>
+                                <input
+                                    id="company_logo"
+                                    name="company_logo"
+                                    className="shadow appearance-none bg-gray-600 border-2 border-gray-500 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none focus:shadow-outline"
+                                    accept="image/png, image/jpeg"
+                                    type="file"
                                     required
                                 />
                             </div>
