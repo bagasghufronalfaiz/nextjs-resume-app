@@ -42,6 +42,7 @@ export default function Home() {
         };
 
         getData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleOnBlurName = () => {
@@ -68,7 +69,7 @@ export default function Home() {
         };
 
         setUser(newUser);
-    }
+    };
 
     const handleEditName = () => {
         setisEditName(!isEditName);
