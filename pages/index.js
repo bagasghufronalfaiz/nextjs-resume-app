@@ -356,26 +356,4 @@ function Home() {
     );
 }
 
-// export  function getStaticProps() {
-//     const experiencesCollectionRef = collection(db, "experiences");
-//     const usersCollectionRef = collection(db, "users");
-//     const experiencesData =  getDocs(experiencesCollectionRef);
-//     const usersData =  getDocs(usersCollectionRef);
-//     // const oneUser = usersData.docs.map((doc) => ({
-//     //     ...doc.data(),
-//     //     id: doc.id,
-//     // }));
-
-//     return {
-//         props: {
-//             experiences: experiencesData.docs,
-//             // experiences: experiencesData.docs.map((doc) => ({
-//             //     ...doc.data(),
-//             //     id: doc.id,
-//             // })),
-//             user: usersData.docs,
-//         },
-//     };
-// }
-
 export default Home;
