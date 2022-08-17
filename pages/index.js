@@ -47,8 +47,6 @@ function Home() {
         getData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    console.log("user");
-    console.log(user);
 
     const handleOnBlurName = () => {
         setisEditName(!isEditName);
